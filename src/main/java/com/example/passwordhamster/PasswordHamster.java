@@ -13,6 +13,7 @@ public class PasswordHamster extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(PasswordHamster.class.getResource("password-generator-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 500, 500);
         stage.setTitle("Password Hamster");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
