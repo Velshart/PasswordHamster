@@ -2,9 +2,14 @@ package com.example.passwordhamster;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +40,9 @@ public class PasswordGeneratorController {
     private Button savePasswordButton;
 
     @FXML
+    private Button savedPasswordsButton;
+
+    @FXML
     private TextField passwordLengthField;
 
     @FXML
@@ -48,6 +56,9 @@ public class PasswordGeneratorController {
 
     @FXML
     private TextField errorTextField;
+
+    @FXML
+    private Button changePasswordButton;
 
     @FXML
     public void onLengthInput() {
@@ -137,7 +148,64 @@ public class PasswordGeneratorController {
         return generatedPassword.toString();
     }
 
+    @FXML
+    public void onChangePasswordButtonClick() {
+        Stage changePasswordStage = new Stage();
+        changePasswordStage.setResizable(false);
+        changePasswordStage.setTitle("Change password");
+
+        FXMLLoader loader = new FXMLLoader(PasswordHamster.class.getResource("change-password-view.fxml"));
+        try {
+            Scene changePasswordScene = new Scene(loader.load(), 364, 236);
+            changePasswordStage.setScene(changePasswordScene);
+
+            changePasswordStage.show();
+
+        }catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void onSavedPasswordsButtonClick() {
+        Stage savedPasswordsLoginStage = new Stage();
+        savedPasswordsLoginStage.setResizable(false);
+        savedPasswordsLoginStage.setTitle("Saved passwords");
+
+        FXMLLoader loader = new FXMLLoader(PasswordHamster.class.getResource("saved-passwords-login-view.fxml"));
+
+        try {
+            Scene savedPasswordsLoginScene = new Scene(loader.load(), 277, 133);
+            savedPasswordsLoginStage.setScene(savedPasswordsLoginScene);
+            savedPasswordsLoginStage.show();
+        }catch(IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onSavePasswordButtonClick() {
+        if(!generatedPasswordField.getText().isEmpty()) {
+            Stage savePasswordStage = new Stage();
+            savePasswordStage.setResizable(false);
+            savePasswordStage.setTitle("Save password");
+
+            FXMLLoader savePasswordLoader = new FXMLLoader(PasswordHamster.class.getResource("save-password-view.fxml"));
+
+            try {
+                Scene savePasswordScene = new Scene(savePasswordLoader.load(), 287, 182);
+                savePasswordStage.setScene(savePasswordScene);
+                savePasswordStage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     private boolean decide() {
+
+        //2 so it will return 0 or 1.
         int range = 2;
         Random random = new Random();
 
