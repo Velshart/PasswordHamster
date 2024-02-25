@@ -47,7 +47,59 @@ public class PasswordGeneratorController {
 
     @FXML
     private Button changePasswordChangeButton;
-    //////////////////////////////////////////
+
+    @FXML
+    public void onChangePasswordChangeButtonClick() {
+        String oldPassword = changePasswordOldPasswordTextField.getText();
+        String newPassword = changePasswordNewPasswordField.getText();
+
+        if(oldPassword.equals(newPassword)) {
+            //change password
+
+            if(!oldPassword.isEmpty()) {
+                changePasswordOldPasswordTextField.setText("");
+                changePasswordNewPasswordField.setText("");
+
+                changePasswordErrorTextField.setText(PASSWORD_CHANGED);
+            }
+        }else {
+            changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
+        }
+    }
+
+    ////////////////////////////////////////////
+
+    ///////////CHANGE PASSWORD LOGIN WINDOW///////////
+    Stage savedPasswordsLoginStage = new Stage();
+    Stage savedPasswordsStage = new Stage();
+
+    @FXML
+    private Button savedPasswordsLoginOkButton;
+
+    @FXML
+    public void onSavedPasswordsLoginOkButtonClick() {
+
+        //TODO: correct password has been provided
+        //savedPasswordsLoginStage.close();
+        savedPasswordsStage.setResizable(false);
+        savedPasswordsStage.setTitle("Saved passwords.");
+
+        FXMLLoader savedPasswordsLoader = new FXMLLoader(PasswordHamster.class.getResource("saved-passwords-view.fxml"));
+
+        try {
+            Scene savedPasswordsScene = new Scene(savedPasswordsLoader.load(), 666, 442);
+            savedPasswordsStage.setScene(savedPasswordsScene);
+
+            savedPasswordsStage.show();
+
+        }catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        ((Stage)savedPasswordsLoginOkButton.getScene().getWindow()).close();
+    }
+
+
+    ////////////////////////////////////////////
 
 
     @FXML
@@ -188,7 +240,6 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onSavedPasswordsButtonClick() {
-        Stage savedPasswordsLoginStage = new Stage();
         savedPasswordsLoginStage.setResizable(false);
         savedPasswordsLoginStage.setTitle("Saved passwords");
 
@@ -219,25 +270,6 @@ public class PasswordGeneratorController {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    @FXML
-    public void onChangePasswordChangeButtonClick() {
-        String oldPassword = changePasswordOldPasswordTextField.getText();
-        String newPassword = changePasswordNewPasswordField.getText();
-
-        if(oldPassword.equals(newPassword)) {
-            //change password
-
-            if(!oldPassword.isEmpty()) {
-                changePasswordOldPasswordTextField.setText("");
-                changePasswordNewPasswordField.setText("");
-
-                changePasswordErrorTextField.setText(PASSWORD_CHANGED);
-            }
-        }else {
-            changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
         }
     }
 
