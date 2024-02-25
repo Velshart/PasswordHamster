@@ -1,6 +1,7 @@
-package com.example.passwordhamster;
+package com.example.passwordhamster.controllers;
 
 
+import com.example.passwordhamster.PasswordHamster;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
