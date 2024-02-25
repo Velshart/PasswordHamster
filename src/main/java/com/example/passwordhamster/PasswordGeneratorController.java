@@ -30,78 +30,6 @@ enum Errors {
 }
 
 public class PasswordGeneratorController {
-
-    ///////////CHANGE PASSWORD WINDOW///////////
-    Stage changePasswordStage = new Stage();
-    private final String PASSWORDS_DIFFERENT_OR_EMPTY = "THE PASSWORDS GIVEN ARE DIFFERENT OR SOME FIELDS ARE EMPTY";
-    private final String PASSWORD_CHANGED = "THE PASSWORD HAS BEEN CHANGED SUCCESSFULLY";
-
-    @FXML
-    private TextField changePasswordOldPasswordTextField;
-
-    @FXML
-    private TextField changePasswordNewPasswordField;
-
-    @FXML
-    private TextField changePasswordErrorTextField;
-
-    @FXML
-    private Button changePasswordChangeButton;
-
-    @FXML
-    public void onChangePasswordChangeButtonClick() {
-        String oldPassword = changePasswordOldPasswordTextField.getText();
-        String newPassword = changePasswordNewPasswordField.getText();
-
-        if(oldPassword.equals(newPassword)) {
-            //change password
-
-            if(!oldPassword.isEmpty()) {
-                changePasswordOldPasswordTextField.setText("");
-                changePasswordNewPasswordField.setText("");
-
-                changePasswordErrorTextField.setText(PASSWORD_CHANGED);
-            }
-        }else {
-            changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
-        }
-    }
-
-    ////////////////////////////////////////////
-
-    ///////////CHANGE PASSWORD LOGIN WINDOW///////////
-    Stage savedPasswordsLoginStage = new Stage();
-    Stage savedPasswordsStage = new Stage();
-
-    @FXML
-    private Button savedPasswordsLoginOkButton;
-
-    @FXML
-    public void onSavedPasswordsLoginOkButtonClick() {
-
-        //TODO: correct password has been provided
-        //savedPasswordsLoginStage.close();
-        savedPasswordsStage.setResizable(false);
-        savedPasswordsStage.setTitle("Saved passwords.");
-
-        FXMLLoader savedPasswordsLoader = new FXMLLoader(PasswordHamster.class.getResource("saved-passwords-view.fxml"));
-
-        try {
-            Scene savedPasswordsScene = new Scene(savedPasswordsLoader.load(), 666, 442);
-            savedPasswordsStage.setScene(savedPasswordsScene);
-
-            savedPasswordsStage.show();
-
-        }catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        ((Stage)savedPasswordsLoginOkButton.getScene().getWindow()).close();
-    }
-
-
-    ////////////////////////////////////////////
-
-
     @FXML
     private TextField generatedPasswordField;
 
@@ -222,6 +150,7 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onChangePasswordButtonClick() {
+        Stage changePasswordStage = new Stage();
         changePasswordStage.setResizable(false);
         changePasswordStage.setTitle("Change password");
 
@@ -240,6 +169,7 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onSavedPasswordsButtonClick() {
+        Stage savedPasswordsLoginStage = new Stage();
         savedPasswordsLoginStage.setResizable(false);
         savedPasswordsLoginStage.setTitle("Saved passwords");
 
