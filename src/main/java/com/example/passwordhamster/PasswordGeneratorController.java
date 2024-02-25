@@ -30,6 +30,26 @@ enum Errors {
 }
 
 public class PasswordGeneratorController {
+
+    ///////////CHANGE PASSWORD WINDOW///////////
+    Stage changePasswordStage = new Stage();
+    private final String PASSWORDS_DIFFERENT_OR_EMPTY = "THE PASSWORDS GIVEN ARE DIFFERENT OR SOME FIELDS ARE EMPTY";
+    private final String PASSWORD_CHANGED = "THE PASSWORD HAS BEEN CHANGED SUCCESSFULLY";
+
+    @FXML
+    private TextField changePasswordOldPasswordTextField;
+
+    @FXML
+    private TextField changePasswordNewPasswordField;
+
+    @FXML
+    private TextField changePasswordErrorTextField;
+
+    @FXML
+    private Button changePasswordChangeButton;
+    //////////////////////////////////////////
+
+
     @FXML
     private TextField generatedPasswordField;
 
@@ -150,7 +170,6 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onChangePasswordButtonClick() {
-        Stage changePasswordStage = new Stage();
         changePasswordStage.setResizable(false);
         changePasswordStage.setTitle("Change password");
 
@@ -200,6 +219,25 @@ public class PasswordGeneratorController {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    @FXML
+    public void onChangePasswordChangeButtonClick() {
+        String oldPassword = changePasswordOldPasswordTextField.getText();
+        String newPassword = changePasswordNewPasswordField.getText();
+
+        if(oldPassword.equals(newPassword)) {
+            //change password
+
+            if(!oldPassword.isEmpty()) {
+                changePasswordOldPasswordTextField.setText("");
+                changePasswordNewPasswordField.setText("");
+
+                changePasswordErrorTextField.setText(PASSWORD_CHANGED);
+            }
+        }else {
+            changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
         }
     }
 
