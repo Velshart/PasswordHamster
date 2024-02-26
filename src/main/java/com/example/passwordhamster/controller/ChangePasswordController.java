@@ -1,5 +1,6 @@
-package com.example.passwordhamster.controllers;
+package com.example.passwordhamster.controller;
 
+import com.example.passwordhamster.json.JsonWriter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -25,17 +26,15 @@ public class ChangePasswordController {
         String oldPassword = changePasswordOldPasswordTextField.getText();
         String newPassword = changePasswordNewPasswordField.getText();
 
-        if(oldPassword.equals(newPassword)) {
-            //change password
+            if(!oldPassword.isEmpty() && !newPassword.isEmpty()) {
+                JsonWriter.writePasswordToFile(newPassword);
 
-            if(!oldPassword.isEmpty()) {
                 changePasswordOldPasswordTextField.setText("");
                 changePasswordNewPasswordField.setText("");
 
                 changePasswordErrorTextField.setText(PASSWORD_CHANGED);
+            }else {
+                changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
             }
-        }else {
-            changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.passwordhamster.controllers;
+package com.example.passwordhamster.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

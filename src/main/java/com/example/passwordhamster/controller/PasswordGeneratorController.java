@@ -1,4 +1,4 @@
-package com.example.passwordhamster.controllers;
+package com.example.passwordhamster.controller;
 
 
 import com.example.passwordhamster.PasswordHamster;
