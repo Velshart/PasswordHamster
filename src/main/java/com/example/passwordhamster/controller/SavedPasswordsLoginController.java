@@ -37,7 +37,7 @@ public class SavedPasswordsLoginController {
 
                 ((Stage)savedPasswordsLoginOkButton.getScene().getWindow()).close();
             }catch (IOException ex) {
-                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
         }
     }

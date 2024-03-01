@@ -7,7 +7,6 @@ import com.example.passwordhamster.object.PasswordSaver;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -53,17 +52,7 @@ public class PasswordGeneratorController {
     private TextField errorTextField;
 
     @FXML
-    private Button changePasswordButton;
-
-    @FXML
     private TextField passwordGeneratorTagTextField;
-
-    //PASSWORD SAVING
-    @FXML
-    private Button savePasswordOkButton;
-
-    @FXML
-    private TextField savePasswordTagTextField;
 
     private String generatedPasswd;
 
@@ -205,23 +194,6 @@ public class PasswordGeneratorController {
             passwordGeneratorTagTextField.clear();
         } else {
             errorTextField.setText(Errors.TAG_NOT_PROVIDED.getErrorMessage());
-        }
-    }
-
-    @FXML
-    public void onSavePasswordOkButtonClick() {
-
-        if (!savePasswordTagTextField.getText().isEmpty()) {
-            String tag = savePasswordTagTextField.getText();
-
-            List<Password> savedPasswords = PasswordSaver.loadPasswords();
-
-            Password password = new Password(tag, generatedPasswd);
-            savedPasswords.add(password);
-
-            PasswordSaver.savePasswords(savedPasswords);
-
-            ((Stage) savePasswordOkButton.getScene().getWindow()).close();
         }
     }
 
