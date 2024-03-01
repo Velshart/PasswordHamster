@@ -30,7 +30,7 @@ public class PasswordHamster extends Application {
                 fileWriter.write(jsonData);
                 fileWriter.close();
             }catch (IOException ex) {
-                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
         }
 
@@ -40,7 +40,7 @@ public class PasswordHamster extends Application {
         if(!savedPasswordsFile.exists()) {
             try {
                 FileWriter savedPasswordsWriter = new FileWriter(savedPasswordsFilePath);
-                savedPasswordsWriter.write("{}");
+                savedPasswordsWriter.write("[]");
                 savedPasswordsWriter.close();
 
             }catch(IOException ex) {

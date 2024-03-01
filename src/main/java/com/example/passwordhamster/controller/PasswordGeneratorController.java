@@ -2,6 +2,8 @@ package com.example.passwordhamster.controller;
 
 
 import com.example.passwordhamster.PasswordHamster;
+import com.example.passwordhamster.object.Password;
+import com.example.passwordhamster.object.PasswordSaver;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,7 +19,8 @@ import java.util.Random;
 enum Errors {
     LENGTH_IS_NOT_A_NUMBER("LENGTH IS NOT A NUMBER"),
     LENGTH_EMPTY("LENGTH FIELD CANNOT BE EMPTY"),
-    LENGTH_NOT_PROPERLY_FORMATTED("WRONG LENGTH FORMAT");
+    LENGTH_NOT_PROPERLY_FORMATTED("WRONG LENGTH FORMAT"),
+    TAG_NOT_PROVIDED("CHOOSE PASSWORD TAG TO SAVE THIS PASSWORD");
 
     private final String error;
 
@@ -33,15 +36,6 @@ enum Errors {
 public class PasswordGeneratorController {
     @FXML
     private TextField generatedPasswordField;
-
-    @FXML
-    private Button generatePasswordButton;
-
-    @FXML
-    private Button savePasswordButton;
-
-    @FXML
-    private Button savedPasswordsButton;
 
     @FXML
     private TextField passwordLengthField;
@@ -62,6 +56,18 @@ public class PasswordGeneratorController {
     private Button changePasswordButton;
 
     @FXML
+    private TextField passwordGeneratorTagTextField;
+
+    //PASSWORD SAVING
+    @FXML
+    private Button savePasswordOkButton;
+
+    @FXML
+    private TextField savePasswordTagTextField;
+
+    private String generatedPasswd;
+
+    @FXML
     public void onLengthInput() {
         String input = passwordLengthField.getText();
         try {
@@ -70,7 +76,7 @@ public class PasswordGeneratorController {
             if (length > 50) {
                 passwordLengthField.setText("50");
             } else {
-                if (!errorTextField.getText().isEmpty()) errorTextField.setText("");
+                if (!errorTextField.getText().isEmpty()) errorTextField.clear();
             }
 
             if (input.startsWith("0") || input.startsWith("-")) {
@@ -88,15 +94,19 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onGenerateButtonClick() {
-        if(!passwordLengthField.getText().isEmpty()) {
-            generatedPasswordField.setText(
-                    generatePassword(Integer.parseInt(passwordLengthField.getText()),
-                            shouldPasswordContainSpecialCharactersCheckBox.isSelected(),
-                            shouldPasswordContainNumbersCheckBox.isSelected(),
-                            shouldPasswordContainLowercaseAndUppercaseLettersCheckBox.isSelected())
-            );
-            errorTextField.setText("");
+        if (!passwordLengthField.getText().isEmpty()) {
+            generatedPasswd = generatePassword(Integer.parseInt(passwordLengthField.getText()),
+                    shouldPasswordContainSpecialCharactersCheckBox.isSelected(),
+                    shouldPasswordContainNumbersCheckBox.isSelected(),
+                    shouldPasswordContainLowercaseAndUppercaseLettersCheckBox.isSelected());
+
+            passwordLengthField.clear();
+
+            shouldPasswordContainSpecialCharactersCheckBox.setSelected(false);
+            shouldPasswordContainLowercaseAndUppercaseLettersCheckBox.setSelected(false);
+            shouldPasswordContainNumbersCheckBox.setSelected(false);
         }
+        generatedPasswordField.setText(generatedPasswd);
     }
 
     private String generatePassword(int length, boolean canContainSpecialChars, boolean canContainNumbers, boolean canContainUpperLowercaseLetters) {
@@ -104,43 +114,42 @@ public class PasswordGeneratorController {
         Random random = new Random();
 
         List<String> letters = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "x", "y", "z");
-        List<String> specialCharacters =  List.of(".", "@", "*", "#", "%", "!", "?", ",", ":");
+        List<String> specialCharacters = List.of(".", "@", "*", "#", "%", "!", "?", ",", ":");
         List<String> numbers = List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
         List<String> upperLowercaseLetters = List.of("a", "A", "b", "B", "c", "C", "d", "D", "e", "E", "f", "F", "g", "G", "h", "H", "i", "I", "j", "J", "k", "K", "l", "L", "m", "M", "n", "N", "o", "O", "p", "P", "q", "Q", "r", "R", "s", "S", "t", "T", "u", "U", "v", "V", "w", "W", "x", "X", "y", "Y", "z", "Z");
 
 
-
         while (generatedPassword.length() < length) {
-            while(true) {
+            while (true) {
                 if (canContainSpecialChars) {
 
                     if (decide()) {
                         generatedPassword.append(specialCharacters.get(random.nextInt(specialCharacters.size())));
                         break;
                     }
-                }else {
+                } else {
                     generatedPassword.append(letters.get(random.nextInt(letters.size())));
                     break;
                 }
 
-                if(canContainNumbers) {
+                if (canContainNumbers) {
 
-                    if(decide()) {
+                    if (decide()) {
                         generatedPassword.append(numbers.get(random.nextInt(numbers.size())));
                         break;
                     }
-                }else {
+                } else {
                     generatedPassword.append(letters.get(random.nextInt(letters.size())));
                     break;
                 }
 
-                if(canContainUpperLowercaseLetters) {
+                if (canContainUpperLowercaseLetters) {
 
-                    if(decide()) {
+                    if (decide()) {
                         generatedPassword.append(upperLowercaseLetters.get(random.nextInt(upperLowercaseLetters.size())));
                         break;
                     }
-                }else {
+                } else {
                     generatedPassword.append(letters.get(random.nextInt(letters.size())));
                     break;
                 }
@@ -162,45 +171,57 @@ public class PasswordGeneratorController {
 
             changePasswordStage.show();
 
-        }catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
 
     }
 
     @FXML
     public void onSavedPasswordsButtonClick() {
-        Stage savedPasswordsLoginStage = new Stage();
-        savedPasswordsLoginStage.setResizable(false);
-        savedPasswordsLoginStage.setTitle("Saved passwords");
+            Stage savedPasswordsLoginStage = new Stage();
+            savedPasswordsLoginStage.setResizable(false);
+            savedPasswordsLoginStage.setTitle("Saved passwords");
 
-        FXMLLoader loader = new FXMLLoader(PasswordHamster.class.getResource("saved-passwords-login-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(PasswordHamster.class.getResource("saved-passwords-login-view.fxml"));
 
-        try {
-            Scene savedPasswordsLoginScene = new Scene(loader.load(), 277, 133);
-            savedPasswordsLoginStage.setScene(savedPasswordsLoginScene);
-            savedPasswordsLoginStage.show();
-        }catch(IOException ex) {
-            ex.printStackTrace();
-        }
+            try {
+                Scene savedPasswordsLoginScene = new Scene(loader.load(), 277, 133);
+                savedPasswordsLoginStage.setScene(savedPasswordsLoginScene);
+                savedPasswordsLoginStage.show();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
     }
 
     @FXML
     public void onSavePasswordButtonClick() {
-        if(!generatedPasswordField.getText().isEmpty()) {
-            Stage savePasswordStage = new Stage();
-            savePasswordStage.setResizable(false);
-            savePasswordStage.setTitle("Save password");
+        if (!generatedPasswordField.getText().isEmpty() && !passwordGeneratorTagTextField.getText().isEmpty()) {
+            List<Password> passwords = PasswordSaver.loadPasswords();
 
-            FXMLLoader savePasswordLoader = new FXMLLoader(PasswordHamster.class.getResource("save-password-view.fxml"));
+            passwords.add(new Password(passwordGeneratorTagTextField.getText(), generatedPasswordField.getText()));
+            PasswordSaver.savePasswords(passwords);
 
-            try {
-                Scene savePasswordScene = new Scene(savePasswordLoader.load(), 287, 182);
-                savePasswordStage.setScene(savePasswordScene);
-                savePasswordStage.show();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            passwordGeneratorTagTextField.clear();
+        } else {
+            errorTextField.setText(Errors.TAG_NOT_PROVIDED.getErrorMessage());
+        }
+    }
+
+    @FXML
+    public void onSavePasswordOkButtonClick() {
+
+        if (!savePasswordTagTextField.getText().isEmpty()) {
+            String tag = savePasswordTagTextField.getText();
+
+            List<Password> savedPasswords = PasswordSaver.loadPasswords();
+
+            Password password = new Password(tag, generatedPasswd);
+            savedPasswords.add(password);
+
+            PasswordSaver.savePasswords(savedPasswords);
+
+            ((Stage) savePasswordOkButton.getScene().getWindow()).close();
         }
     }
 
