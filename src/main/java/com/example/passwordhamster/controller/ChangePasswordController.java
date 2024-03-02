@@ -12,8 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ChangePasswordController {
-    private final String PASSWORDS_DIFFERENT_OR_EMPTY = "THE PASSWORDS GIVEN ARE DIFFERENT OR SOME FIELDS ARE EMPTY";
-    private final String PASSWORD_CHANGED = "THE PASSWORD HAS BEEN CHANGED SUCCESSFULLY";
 
     @FXML
     private TextField changePasswordOldPasswordTextField;
@@ -23,9 +21,6 @@ public class ChangePasswordController {
 
     @FXML
     private TextField changePasswordErrorTextField;
-
-    @FXML
-    private Button changePasswordChangeButton;
 
     @FXML
     public void onChangePasswordChangeButtonClick() {
@@ -39,8 +34,10 @@ public class ChangePasswordController {
                 changePasswordOldPasswordTextField.setText("");
                 changePasswordNewPasswordField.setText("");
 
+                String PASSWORD_CHANGED = "THE PASSWORD HAS BEEN CHANGED SUCCESSFULLY";
                 changePasswordErrorTextField.setText(PASSWORD_CHANGED);
             }else {
+                String PASSWORDS_DIFFERENT_OR_EMPTY = "THE PASSWORDS GIVEN ARE DIFFERENT OR SOME FIELDS ARE EMPTY";
                 changePasswordErrorTextField.setText(PASSWORDS_DIFFERENT_OR_EMPTY);
             }
     }

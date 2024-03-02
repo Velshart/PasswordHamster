@@ -1,4 +1,5 @@
-package com.example.passwordhamster.object;
+package com.example.passwordhamster.json;
+import com.example.passwordhamster.object.Password;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

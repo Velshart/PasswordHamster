@@ -1,9 +1,10 @@
 package com.example.passwordhamster.controller;
 
 
+import com.example.passwordhamster.enumeration.Errors;
 import com.example.passwordhamster.PasswordHamster;
 import com.example.passwordhamster.object.Password;
-import com.example.passwordhamster.object.PasswordSaver;
+import com.example.passwordhamster.json.PasswordSaver;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,29 +16,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-enum Errors {
-    LENGTH_IS_NOT_A_NUMBER("LENGTH IS NOT A NUMBER"),
-    LENGTH_EMPTY("LENGTH FIELD CANNOT BE EMPTY"),
-    LENGTH_NOT_PROPERLY_FORMATTED("WRONG LENGTH FORMAT"),
-    TAG_NOT_PROVIDED("CHOOSE PASSWORD TAG TO SAVE THIS PASSWORD");
-
-    private final String error;
-
-    Errors(String error) {
-        this.error = error;
-    }
-
-    public String getErrorMessage() {
-        return error;
-    }
-}
 
 public class PasswordGeneratorController {
     @FXML
     private TextField generatedPasswordField;
 
     @FXML
-    private TextField passwordLengthField;
+    private TextField passwordGeneratorPasswordLengthField;
 
     @FXML
     private CheckBox shouldPasswordContainSpecialCharactersCheckBox;
@@ -49,7 +34,7 @@ public class PasswordGeneratorController {
     private CheckBox shouldPasswordContainLowercaseAndUppercaseLettersCheckBox;
 
     @FXML
-    private TextField errorTextField;
+    private TextField passwordGeneratorErrorTextField;
 
     @FXML
     private TextField passwordGeneratorTagTextField;
@@ -57,39 +42,44 @@ public class PasswordGeneratorController {
     private String generatedPasswd;
 
     @FXML
+    public void initialize() {
+        passwordGeneratorErrorTextField.setStyle("-fx-text-inner-color: red;");
+    }
+
+    @FXML
     public void onLengthInput() {
-        String input = passwordLengthField.getText();
+        String input = passwordGeneratorPasswordLengthField.getText();
         try {
             int length = Integer.parseInt(input);
 
             if (length > 50) {
-                passwordLengthField.setText("50");
+                passwordGeneratorPasswordLengthField.setText("50");
             } else {
-                if (!errorTextField.getText().isEmpty()) errorTextField.clear();
+                if (!passwordGeneratorErrorTextField.getText().isEmpty()) passwordGeneratorErrorTextField.clear();
             }
 
             if (input.startsWith("0") || input.startsWith("-")) {
-                errorTextField.setText(Errors.LENGTH_NOT_PROPERLY_FORMATTED.getErrorMessage());
+                passwordGeneratorErrorTextField.setText(Errors.LENGTH_NOT_PROPERLY_FORMATTED.getErrorMessage());
             }
 
         } catch (NumberFormatException ex) {
             if (!input.isEmpty()) {
-                errorTextField.setText(Errors.LENGTH_IS_NOT_A_NUMBER.getErrorMessage());
+                passwordGeneratorErrorTextField.setText(Errors.LENGTH_IS_NOT_A_NUMBER.getErrorMessage());
             } else {
-                errorTextField.setText(Errors.LENGTH_EMPTY.getErrorMessage());
+                passwordGeneratorErrorTextField.setText(Errors.LENGTH_EMPTY.getErrorMessage());
             }
         }
     }
 
     @FXML
     public void onGenerateButtonClick() {
-        if (!passwordLengthField.getText().isEmpty()) {
-            generatedPasswd = generatePassword(Integer.parseInt(passwordLengthField.getText()),
+        if (!passwordGeneratorPasswordLengthField.getText().isEmpty()) {
+            generatedPasswd = generatePassword(Integer.parseInt(passwordGeneratorPasswordLengthField.getText()),
                     shouldPasswordContainSpecialCharactersCheckBox.isSelected(),
                     shouldPasswordContainNumbersCheckBox.isSelected(),
                     shouldPasswordContainLowercaseAndUppercaseLettersCheckBox.isSelected());
 
-            passwordLengthField.clear();
+            passwordGeneratorPasswordLengthField.clear();
 
             shouldPasswordContainSpecialCharactersCheckBox.setSelected(false);
             shouldPasswordContainLowercaseAndUppercaseLettersCheckBox.setSelected(false);
@@ -185,15 +175,21 @@ public class PasswordGeneratorController {
 
     @FXML
     public void onSavePasswordButtonClick() {
-        if (!generatedPasswordField.getText().isEmpty() && !passwordGeneratorTagTextField.getText().isEmpty()) {
-            List<Password> passwords = PasswordSaver.loadPasswords();
+        try {
+            if (!generatedPasswordField.getText().isEmpty() && !passwordGeneratorTagTextField.getText().isEmpty()) {
+                List<Password> passwords = PasswordSaver.loadPasswords();
 
-            passwords.add(new Password(passwordGeneratorTagTextField.getText(), generatedPasswordField.getText()));
-            PasswordSaver.savePasswords(passwords);
+                passwords.add(new Password(passwordGeneratorTagTextField.getText(), generatedPasswordField.getText()));
+                PasswordSaver.savePasswords(passwords);
 
-            passwordGeneratorTagTextField.clear();
-        } else {
-            errorTextField.setText(Errors.TAG_NOT_PROVIDED.getErrorMessage());
+                passwordGeneratorTagTextField.clear();
+                generatedPasswordField.clear();
+                passwordGeneratorErrorTextField.clear();
+            } else {
+                passwordGeneratorErrorTextField.setText(Errors.TAG_NOT_PROVIDED.getErrorMessage());
+            }
+        }catch (NullPointerException ex) {
+            //ignored
         }
     }
 

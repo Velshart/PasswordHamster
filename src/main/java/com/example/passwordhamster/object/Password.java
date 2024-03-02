@@ -1,7 +1,7 @@
 package com.example.passwordhamster.object;
 
 public class Password {
-    private String tag;
+    private final String tag;
 
     private String password;
 
