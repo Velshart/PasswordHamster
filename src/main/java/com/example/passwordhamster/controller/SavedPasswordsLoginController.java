@@ -1,7 +1,6 @@
 package com.example.passwordhamster.controller;
 
 import com.example.passwordhamster.PasswordHamster;
-import com.example.passwordhamster.json.JsonReader;
 import com.example.passwordhamster.object.Login;
 import com.google.gson.Gson;
 import javafx.fxml.FXML;
