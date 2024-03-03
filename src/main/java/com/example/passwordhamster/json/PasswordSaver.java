@@ -1,4 +1,5 @@
 package com.example.passwordhamster.json;
+import com.example.passwordhamster.object.Login;
 import com.example.passwordhamster.object.Password;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,5 +34,21 @@ public class PasswordSaver {
             throw new RuntimeException(ex);
         }
         return passwords;
+    }
+
+    public static String readUserPassword() {
+        String password;
+        String filename = "login.json";
+        try (FileReader fileReader = new FileReader(filename)) {
+            Gson gson = new Gson();
+            Login userPassword = gson.fromJson(fileReader, Login.class);
+
+            password = userPassword.getPassword();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return password;
     }
 }

@@ -34,7 +34,7 @@ public class ChangePasswordController {
                 changePasswordOldPasswordTextField.setText("");
                 changePasswordNewPasswordField.setText("");
 
-                String PASSWORD_CHANGED = "THE PASSWORD HAS BEEN CHANGED SUCCESSFULLY";
+                String PASSWORD_CHANGED = "PASSWORD CHANGED SUCCESSFULLY";
                 changePasswordErrorTextField.setText(PASSWORD_CHANGED);
             }else {
                 String PASSWORDS_DIFFERENT_OR_EMPTY = "THE PASSWORDS GIVEN ARE DIFFERENT OR SOME FIELDS ARE EMPTY";

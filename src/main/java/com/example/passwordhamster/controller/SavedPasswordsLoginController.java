@@ -1,6 +1,7 @@
 package com.example.passwordhamster.controller;
 
 import com.example.passwordhamster.PasswordHamster;
+import com.example.passwordhamster.json.PasswordSaver;
 import com.example.passwordhamster.object.Login;
 import com.google.gson.Gson;
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ public class SavedPasswordsLoginController {
     public void onSavedPasswordsLoginOkButtonClick() {
         String providedPassword = savedPasswordsLoginPasswordField.getText();
 
-        if(readUserPassword().equals(providedPassword)) {
+        if(PasswordSaver.readUserPassword().equals(providedPassword)) {
             Stage savedPasswordsStage = new Stage();
             savedPasswordsStage.setResizable(false);
             savedPasswordsStage.setTitle("Saved passwords");
@@ -42,21 +43,5 @@ public class SavedPasswordsLoginController {
                 throw new RuntimeException(ex);
             }
         }
-    }
-
-    private String readUserPassword() {
-        String password;
-        String filename = "login.json";
-        try (FileReader fileReader = new FileReader(filename)) {
-            Gson gson = new Gson();
-            Login userPassword = gson.fromJson(fileReader, Login.class);
-
-            password = userPassword.getPassword();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return password;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.passwordhamster;
 
+import com.example.passwordhamster.json.PasswordSaver;
 import com.example.passwordhamster.object.Login;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class PasswordHamster extends Application {
+
+    private final String DEFAULT_PASSWORD = "admin";
+
     @Override
     public void start(Stage stage) throws IOException {
         String loginFilePath = "login.json";
@@ -54,6 +58,22 @@ public class PasswordHamster extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
+
+        if(PasswordSaver.readUserPassword().equals(DEFAULT_PASSWORD)) {
+            Stage passwordChangeRequiredStage = new Stage();
+            passwordChangeRequiredStage.setResizable(false);
+            passwordChangeRequiredStage.setTitle("Saved passwords");
+
+            FXMLLoader loader = new FXMLLoader(PasswordHamster.class.getResource("password-change-required.fxml"));
+
+            try {
+                Scene savedPasswordsLoginScene = new Scene(loader.load(), 442, 163);
+                passwordChangeRequiredStage.setScene(savedPasswordsLoginScene);
+                passwordChangeRequiredStage.show();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 
     }
 
